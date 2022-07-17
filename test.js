@@ -134,6 +134,20 @@ describe(`Function: dig`, () => {
 			assert.equal(r.err.name, 'PathNotFound');
 			assert.equal(r.err.info.key, 'non_existent');
 		});
+		it(`error: TypeMismatch`, () => {
+			let r;
+			r = dig(dummy(), 'alice.age.xxx');
+			assert.equal(r.err.name, 'TypeMismatch');
+			assert.equal(r.err.info.key, 'age');
+			assert.equal(r.err.info.expectedType, 'object');
+		});
+		it(`error: TypeMismatch (array)`, () => {
+			let r;
+			r = dig(dummy(), 'alice.age[].xxx');
+			assert.equal(r.err.name, 'TypeMismatch');
+			assert.equal(r.err.info.key, 'age');
+			assert.equal(r.err.info.expectedType, 'Array');
+		});
 		it(`throwing errors`, () => {
 			assert.throws(() => {
 				dig(dummy(), 'non_existent', { throw: true });
