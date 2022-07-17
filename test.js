@@ -78,11 +78,11 @@ describe(`Function: dig`, () => {
 
 			r = dig(dummy(), 'bob.non_existent', { set: 'XXX' });
 			assert.equal(r.found, undefined);
-			assert.equal(r.err.name, 'PathNotFound');
+			assert.equal(r.err.name, 'NoSuchKey');
 
 			r = dig(dummy(), 'bob.non_existent', { default: 'XXX' });
 			assert.equal(r.found, undefined);
-			assert.equal(r.err.name, 'PathNotFound');
+			assert.equal(r.err.name, 'NoSuchKey');
 		});
 		it(`makePath`, () => {
 			let r;
@@ -120,18 +120,18 @@ describe(`Function: dig`, () => {
 		});
 	});
 	describe(`error handling`, () => {
-		it(`error: PathNotFound`, () => {
+		it(`error: NoSuchKey`, () => {
 			let r;
 			r = dig(dummy(), 'non_existent');
-			assert.equal(r.err.name, 'PathNotFound');
+			assert.equal(r.err.name, 'NoSuchKey');
 			assert.equal(r.err.info.key, 'non_existent');
 
 			r = dig(dummy(), 'alice.non_existent');
-			assert.equal(r.err.name, 'PathNotFound');
+			assert.equal(r.err.name, 'NoSuchKey');
 			assert.equal(r.err.info.key, 'non_existent');
 
 			r = dig(dummy(), 'alice.accounts.non_existent');
-			assert.equal(r.err.name, 'PathNotFound');
+			assert.equal(r.err.name, 'NoSuchKey');
 			assert.equal(r.err.info.key, 'non_existent');
 		});
 		it(`error: TypeMismatch`, () => {
