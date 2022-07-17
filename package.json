@@ -1,0 +1,49 @@
+{
+  "name": "obj-digger",
+  "version": "1.0.0",
+  "description": "Safely access a property burried deep inside nested objects",
+  "main": "index.js",
+  "files": [
+    "src",
+    "index.js",
+    "index.js.map"
+  ],
+  "exports": {
+    "import": "./src/index.js",
+    "require": "./index.js"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run clean && npm run build && npm run test",
+    "watch": "npm-watch",
+    "test": "c8 mocha --enable-source-maps",
+    "build": "rollup -c",
+    "clean": "rm -f index.js index.js.map && find . -name '.DS_Store' -not -path '*/node_modules/*' | xargs rm -r"
+  },
+  "watch": {
+    "test": {
+      "patterns": [
+        "test.js",
+        "index.js"
+      ],
+      "inherit": true
+    },
+    "build": {
+      "patterns": "src",
+      "inherit": true
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amekusa/obj-digger.git"
+  },
+  "keywords": [
+    "utility",
+    "dig"
+  ],
+  "author": "amekusa (amekusa.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amekusa/obj-digger/issues"
+  },
+  "homepage": "https://github.com/amekusa/obj-digger#readme"
+}
