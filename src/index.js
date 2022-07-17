@@ -91,10 +91,11 @@ function dig(obj, path, opts = {}) {
 
 			} else { // not diggable
 				r.err = new Error(`property '${iP}' is not an object`);
-				r.err.name = 'PathNotDiggable';
+				r.err.name = 'TypeMismatch';
 				r.err.info = {
 					path: r.path,
-					key: iP, value: obj[iP]
+					key: iP, value: obj[iP],
+					expectedType: 'object'
 				};
 				if (opts.throw) throw r.err;
 				return r;
