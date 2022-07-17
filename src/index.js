@@ -52,8 +52,9 @@ function dig(obj, path, opts = {}) {
 					r.err = new Error(`property '${iP}' is not an array`);
 					r.err.name = 'TypeMismatch';
 					r.err.info = {
+						path: r.path,
 						key: iP, value: obj[iP],
-						path: r.path
+						expectedType: 'Array'
 					};
 					if (opts.throw) throw r.err;
 					return r;
