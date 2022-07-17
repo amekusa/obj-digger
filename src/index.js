@@ -67,6 +67,7 @@ function dig(obj, path, opts = {}) {
 				}
 				return r;
 			}
+			// path not found
 			r.err = new Error(`path not found`);
 			r.err.name = 'PathNotFound';
 			r.err.info = {
@@ -83,8 +84,8 @@ function dig(obj, path, opts = {}) {
 				if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
 				r.found = obj[iP];
 				return r;
-
-			} else if (isDiggable(obj[iP])) { // dig
+			}
+			if (isDiggable(obj[iP])) { // dig
 				obj = obj[iP];
 				r.path.push(obj);
 
