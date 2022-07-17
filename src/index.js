@@ -45,6 +45,37 @@ function dig(obj, path, opts = {}) {
 	for (let i = 0;; i++) {
 		let iP = p[i];
 
+		if (iP.endsWith('[]')) { // array access
+			iP = iP.substring(0, iP.length - 2);
+			if (iP in obj) {
+				if (!Array.isArray(obj[iP])) { // not an array
+					r.err = new Error(`property '${iP}' is not an array`);
+					r.err.name = 'TypeMismatch';
+					r.err.info = {
+						key: iP, value: obj[iP],
+						path: r.path
+					};
+					if (opts.throw) throw r.err;
+					return r;
+				}
+				// dig each elements in the array
+				r.results = [];
+				let pRest = p.slice(i + 1);
+				for (let j = 0; j < obj[iP].length; j++) {
+					r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
+				}
+				return r;
+			}
+			r.err = new Error(`path not found`);
+			r.err.name = 'PathNotFound';
+			r.err.info = {
+				path: r.path,
+				key: iP
+			};
+			if (opts.throw) throw r.err;
+			return r;
+		}
+
 		if (iP in obj) { // path found
 			if (i == p.length - 1) { // destination
 				if ('set'    in opts) obj[iP] = opts.set;
