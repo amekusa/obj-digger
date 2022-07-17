@@ -12,7 +12,7 @@ function dummy() {
 			}
 		},
 		bob: {
-			age: 11,
+			age: 20,
 			sex: 'male',
 			accounts: {
 				twitter: 'twitter.com/bob123',
@@ -20,8 +20,25 @@ function dummy() {
 			}
 		},
 		charlie: {
-			age: 12,
-			sex: 'male'
+			age: 30,
+			sex: 'male',
+			wishlist: [
+				{
+					type:   'book',
+					title:  'The Origin of Consciousness in the Breakdown of the Bicameral Mind',
+					author: 'Julian Jaynes'
+				},
+				{
+					type:     'movie',
+					title:    'Mulholland Dr.',
+					director: 'David Lynch'
+				},
+				{
+					type:   'album',
+					title:  'Grace',
+					artist: 'Jeff Buckley'
+				}
+			]
 		}
 	};
 	return r;
@@ -42,12 +59,20 @@ describe(`Function: dig`, () => {
 		r = dig(dummy(), 'alice.accounts.twitter');
 		assert.equal(r.found, 'twitter.com/alice123');
 	});
+	it(`array`, () => {
+		let r;
+		r = dig(dummy(), 'charlie.wishlist[].type');
+		assert.equal(r.results.length, 3);
+		assert.equal(r.results[0].found, 'book');
+		assert.equal(r.results[1].found, 'movie');
+		assert.equal(r.results[2].found, 'album');
+	});
 	describe(`options`, () => {
 		it(`set`, () => {
 			let r;
 			let d1 = dummy();
 			let d2 = dummy();
-			r = dig(d2, 'bob.age', { set: 12 });
+			r = dig(d2, 'bob.age', { set: 21 });
 			assert.notEqual(r.found, d1.bob.age);
 			assert.equal(r.found, d2.bob.age);
 
