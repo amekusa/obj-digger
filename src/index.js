@@ -59,6 +59,7 @@ function dig(obj, path, opts = {}) {
 					return r;
 				}
 				// dig each elements in the array
+				r.path.push(obj[iP]);
 				r.results = [];
 				let pRest = p.slice(i + 1);
 				for (let j = 0; j < obj[iP].length; j++) {
