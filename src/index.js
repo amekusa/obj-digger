@@ -60,8 +60,8 @@ function dig(obj, path, opts = {}) {
 				r.err = new Error(`property '${iP}' is not an object`);
 				r.err.name = 'PathNotDiggable';
 				r.err.info = {
-					key: iP, value: obj[iP],
-					path: r.path
+					path: r.path,
+					key: iP, value: obj[iP]
 				};
 				if (opts.throw) throw r.err;
 				return r;
@@ -86,8 +86,8 @@ function dig(obj, path, opts = {}) {
 			r.err = new Error(`path not found`);
 			r.err.name = 'PathNotFound';
 			r.err.info = {
-				key: iP,
-				path: r.path
+				path: r.path,
+				key: iP
 			};
 			if (opts.throw) throw r.err;
 			return r;
