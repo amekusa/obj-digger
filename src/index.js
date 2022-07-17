@@ -69,8 +69,8 @@ function dig(obj, path, opts = {}) {
 				return r;
 			}
 			// path not found
-			r.err = new Error(`path not found`);
-			r.err.name = 'PathNotFound';
+			r.err = new Error(`property '${iP}' is not found`);
+			r.err.name = 'NoSuchKey';
 			r.err.info = {
 				path: r.path,
 				key: iP
@@ -118,8 +118,8 @@ function dig(obj, path, opts = {}) {
 			}
 
 		} else { // path not found
-			r.err = new Error(`path not found`);
-			r.err.name = 'PathNotFound';
+			r.err = new Error(`property '${iP}' is not found`);
+			r.err.name = 'NoSuchKey';
 			r.err.info = {
 				path: r.path,
 				key: iP
