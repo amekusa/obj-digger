@@ -64,7 +64,7 @@ function dig(obj, path, opts = {}) {
 					path: r.path
 				};
 				if (opts.throw) throw r.err;
-				return r.err;
+				return r;
 			}
 
 		} else if (opts.makePath) { // make path
