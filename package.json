@@ -16,6 +16,7 @@
     "prepublishOnly": "npm run clean && npm run build && npm run test",
     "watch": "npm-watch",
     "test": "c8 mocha --enable-source-maps",
+    "codecov": "c8 report -r lcov && codecov",
     "build": "rollup -c",
     "clean": "rm -f index.js index.js.map && find . -name '.DS_Store' -not -path '*/node_modules/*' | xargs rm -r"
   },
