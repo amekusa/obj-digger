@@ -54,7 +54,7 @@ let dug = dig(obj, 'Alice.accounts.tiktok');
 if (dug.err) console.error( dug.err ); // 'NoSuchKey'
 ```
 
-## Advanced Usage
+## Advanced usage: OPTIONS
 There is the optional 3rd parameter: **options** which can enable you to achieve various data manipulation tasks on deeply nested objects.
 
 ### `options.set`
@@ -104,6 +104,46 @@ try {
 }
 ```
 
+---
+
+## Advanced usage: Array Queries
+If you want to dig **multiple objects in an array** like this:
+
+```js
+// example
+let obj = {
+  items: [ // array
+    {
+      type:   'book',
+      title:  'The Origin of Consciousness in the Breakdown of the Bicameral Mind',
+      author: 'Julian Jaynes'
+    }, {
+      type:     'movie',
+      title:    'Mulholland Dr.',
+      director: 'David Lynch'
+    }, {
+      type:   'album',
+      title:  'Grace',
+      artist: 'Jeff Buckley'
+    }
+  ]
+};
+```
+
+Then, put **square brackets `[]`** to the name of the array property in the query, like this:
+
+```js
+let dug = dig(obj, 'items[].type');
+```
+
+The return value, at this time, has a bit different structure.
+The function **recusively operates** for each object in the array, and stores each result into **`results`** property of the return value.
+
+```js
+console.log( dug.results[0].found ); // 'book'
+console.log( dug.results[1].found ); // 'movie'
+console.log( dug.results[2].found ); // 'album'
+```
 
 ---
 Licensed under the MIT license.  
