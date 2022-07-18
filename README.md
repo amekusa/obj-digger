@@ -1,6 +1,10 @@
 # OBJ-DIGGER
 Safely access properties of deeply nested objects.
 
+[![npm](https://img.shields.io/badge/dynamic/json?label=npm%0Apackage&query=%24%5B%27dist-tags%27%5D%5B%27latest%27%5D&url=https%3A%2F%2Fregistry.npmjs.org%2Fcadept%2F)](https://www.npmjs.com/package/cadept) [![codecov](https://codecov.io/gh/amekusa/obj-digger/branch/master/graph/badge.svg?token=LYU3ZAOR84)](https://codecov.io/gh/amekusa/obj-digger)
+
+---
+
 ## How to install
 Install it to your project via NPM:
 
