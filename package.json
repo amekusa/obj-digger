@@ -1,6 +1,6 @@
 {
   "name": "obj-digger",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Safely access properties of deeply nested objects",
   "main": "index.js",
   "files": [
