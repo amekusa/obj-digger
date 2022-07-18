@@ -118,6 +118,13 @@ describe(`Function: dig`, () => {
 			assert.equal(d.bob.x.n, 1);
 			assert.equal(d.bob.x.y.n, 2);
 		});
+		it(`mutate`, () => {
+			let r;
+			let d1 = dummy();
+			let d2 = dummy();
+			dig(d2, 'bob.age', { mutate: age => age * 2 });
+			assert.equal(d2.bob.age, d1.bob.age * 2);
+		});
 	});
 	describe(`error handling`, () => {
 		it(`error: NoSuchKey`, () => {
