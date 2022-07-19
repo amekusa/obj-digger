@@ -64,7 +64,7 @@ function dig(obj, path, opts = {}) {
 				r.results = [];
 				let pRest = p.slice(i + 1);
 				for (let j = 0; j < obj[iP].length; j++) {
-					r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
+					if (isDiggable(obj[iP][j])) r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
 				}
 				return r;
 			}
