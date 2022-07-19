@@ -45,6 +45,16 @@ function dig(obj, path, opts = {}) {
 	for (let i = 0;; i++) {
 		let iP = p[i];
 
+		if (iP == '*') { // wildcard
+			r.results = [];
+			let pRest = p.slice(i + 1);
+			let keys = Object.keys(obj);
+			for (let j = 0; j < keys.length; j++) {
+				if (isDiggable(obj[keys[j]])) r.results.push(dig(obj[keys[j]], pRest, opts)); // recursion
+			}
+			return r;
+		}
+
 		if (iP.endsWith('[]')) { // array access
 			iP = iP.substring(0, iP.length - 2);
 			if (iP in obj) {
