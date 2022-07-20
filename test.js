@@ -127,37 +127,60 @@ describe(`Function: dig`, () => {
 		});
 	});
 	describe(`error handling`, () => {
+		function checkError(data) {
+			let opts = data.args.length > 2 ? data.args[2] : {};
+			let r = dig(data.args[0], data.args[1], Object.assign(opts, { throw: false }));
+			// validate error
+			if (data.name) assert.equal(data.name, r.err.name);
+			if (data.info) {
+				for (let key in data.info) assert.equal(data.info[key], r.err.info[key]);
+			}
+			// check if it throws the exact same error
+			assert.throws(() => {
+				dig(data.args[0], data.args[1], Object.assign(opts, { throw: true }));
+			}, r.err);
+		}
+		it(`error: InvalidArgument`, () => {
+			checkError({
+				args: ['not_an_object', 'alice.age'],
+				name: 'InvalidArgument',
+				info: { value: 'not_an_object' }
+			});
+		});
 		it(`error: NoSuchKey`, () => {
-			let r;
-			r = dig(dummy(), 'non_existent');
-			assert.equal(r.err.name, 'NoSuchKey');
-			assert.equal(r.err.info.key, 'non_existent');
-
-			r = dig(dummy(), 'alice.non_existent');
-			assert.equal(r.err.name, 'NoSuchKey');
-			assert.equal(r.err.info.key, 'non_existent');
-
-			r = dig(dummy(), 'alice.accounts.non_existent');
-			assert.equal(r.err.name, 'NoSuchKey');
-			assert.equal(r.err.info.key, 'non_existent');
+			checkError({
+				args: [dummy(), 'non_existent'],
+				info: { key: 'non_existent' }
+			});
+			checkError({
+				args: [dummy(), 'alice.non_existent'],
+				name: 'NoSuchKey',
+				info: { key: 'non_existent' }
+			});
+			checkError({
+				args: [dummy(), 'alice.accounts.non_existent'],
+				name: 'NoSuchKey',
+				info: { key: 'non_existent' }
+			});
 		});
 		it(`error: TypeMismatch`, () => {
-			let r;
-			r = dig(dummy(), 'alice.age.xxx');
-			assert.equal(r.err.name, 'TypeMismatch');
-			assert.equal(r.err.info.key, 'age');
-			assert.equal(r.err.info.expectedType, 'object');
+			checkError({
+				args: [dummy(), 'alice.age.xxx'],
+				name: 'TypeMismatch',
+				info: {
+					key: 'age',
+					expectedType: 'object'
+				}
+			});
 		});
 		it(`error: TypeMismatch (array)`, () => {
-			let r;
-			r = dig(dummy(), 'alice.age[].xxx');
-			assert.equal(r.err.name, 'TypeMismatch');
-			assert.equal(r.err.info.key, 'age');
-			assert.equal(r.err.info.expectedType, 'Array');
-		});
-		it(`throwing errors`, () => {
-			assert.throws(() => {
-				dig(dummy(), 'non_existent', { throw: true });
+			checkError({
+				args: [dummy(), 'alice.age[].xxx'],
+				name: 'TypeMismatch',
+				info: {
+					key: 'age',
+					expectedType: 'Array'
+				}
 			});
 		});
 	});
