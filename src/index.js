@@ -38,9 +38,22 @@ function isDiggable(x) {
 	return false;
 }
 
+function error(throws, msg, name, info) {
+	let r = new Error(msg);
+	if (name) r.name = name;
+	if (info) r.info = info;
+	if (throws) throw r;
+	return r;
+}
+
 function dig(obj, path, opts = {}) {
+	let r = { path: [] };
+	if (!isDiggable(obj)) {
+		r.err = error(opts.throw, `argument is not diggable`, 'InvalidArgument', { value: obj });
+		return r;
+	}
 	let p = Array.isArray(path) ? path : path.split('.');
-	let r = { path: [obj] };
+	r.path.push(obj);
 
 	for (let i = 0;; i++) {
 		let iP = p[i];
@@ -59,14 +72,11 @@ function dig(obj, path, opts = {}) {
 			iP = iP.substring(0, iP.length - 2);
 			if (iP in obj) {
 				if (!Array.isArray(obj[iP])) { // not an array
-					r.err = new Error(`property '${iP}' is not an array`);
-					r.err.name = 'TypeMismatch';
-					r.err.info = {
+					r.err = error(opts.throw, `property '${iP}' is not an array`, 'TypeMismatch', {
 						path: r.path,
 						key: iP, value: obj[iP],
 						expectedType: 'Array'
-					};
-					if (opts.throw) throw r.err;
+					});
 					return r;
 				}
 				// dig each elements in the array
@@ -79,13 +89,10 @@ function dig(obj, path, opts = {}) {
 				return r;
 			}
 			// path not found
-			r.err = new Error(`property '${iP}' is not found`);
-			r.err.name = 'NoSuchKey';
-			r.err.info = {
+			r.err = error(opts.throw, `property '${iP}' is not found`, 'NoSuchKey', {
 				path: r.path,
 				key: iP
-			};
-			if (opts.throw) throw r.err;
+			});
 			return r;
 		}
 
@@ -101,14 +108,11 @@ function dig(obj, path, opts = {}) {
 				r.path.push(obj);
 
 			} else { // not diggable
-				r.err = new Error(`property '${iP}' is not an object`);
-				r.err.name = 'TypeMismatch';
-				r.err.info = {
+				r.err = error(opts.throw, `property '${iP}' is not an object`, 'TypeMismatch', {
 					path: r.path,
 					key: iP, value: obj[iP],
 					expectedType: 'object'
-				};
-				if (opts.throw) throw r.err;
+				});
 				return r;
 			}
 
@@ -128,13 +132,10 @@ function dig(obj, path, opts = {}) {
 			}
 
 		} else { // path not found
-			r.err = new Error(`property '${iP}' is not found`);
-			r.err.name = 'NoSuchKey';
-			r.err.info = {
+			r.err = error(opts.throw, `property '${iP}' is not found`, 'NoSuchKey', {
 				path: r.path,
 				key: iP
-			};
-			if (opts.throw) throw r.err;
+			});
 			return r;
 		}
 	}
