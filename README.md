@@ -1,12 +1,24 @@
 # OBJ-DIGGER
-Safely access properties of deeply nested objects.
-
 [![npm](https://img.shields.io/badge/dynamic/json?label=npm%0Apackage&query=%24%5B%27dist-tags%27%5D%5B%27latest%27%5D&url=https%3A%2F%2Fregistry.npmjs.org%2Fobj-digger%2F)](https://www.npmjs.com/package/obj-digger) [![codecov](https://codecov.io/gh/amekusa/obj-digger/branch/master/graph/badge.svg?token=LYU3ZAOR84)](https://codecov.io/gh/amekusa/obj-digger)
 
----
+Safely access properties of deeply nested objects.
+
+<!-- TOC depthFrom:2 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+
+- [How to install](#how-to-install)
+- [How to use](#how-to-use)
+- [Advanced usage: OPTIONS](#advanced-usage-options)
+	- [`options.set`](#optionsset)
+	- [`options.makePath`](#optionsmakepath)
+	- [`options.mutate`](#optionsmutate)
+	- [`options.throw`](#optionsthrow)
+- [Advanced usage: Array Queries](#advanced-usage-array-queries)
+- [Advanced usage: Wildcards](#advanced-usage-wildcards)
+
+<!-- /TOC -->
 
 ## How to install
-Install it to your project via NPM:
+Install it in your project via NPM:
 
 ```sh
 npm i obj-digger
@@ -20,7 +32,7 @@ const dig = require('obj-digger');
 ```
 
 ```js
-// ES6
+// EJS
 import dig from 'obj-digger';
 ```
 
@@ -30,6 +42,7 @@ import dig from 'obj-digger';
 
 ```js
 // example
+
 let obj = {
   Alice: {
     age: 20,
@@ -88,6 +101,7 @@ This option is **a callback function** that can be used to mutate the current va
 console.log( obj.Bob.age ); // 30
 
 dig(obj, 'Bob.age', { mutate: age => age * 2 });
+
 console.log( obj.Bob.age ); // 60
 ```
 
@@ -107,13 +121,12 @@ try {
 }
 ```
 
----
-
 ## Advanced usage: Array Queries
 If you want to dig **multiple objects in an array** like this:
 
 ```js
 // example
+
 let obj = {
   items: [ // array
     {
@@ -146,6 +159,37 @@ The function **recusively operates** for each object in the array, and stores ea
 console.log( dug.results[0].found ); // 'book'
 console.log( dug.results[1].found ); // 'movie'
 console.log( dug.results[2].found ); // 'album'
+```
+
+## Advanced usage: Wildcards
+You can use **asterisk `*`** character in the query as **a wildcard** which matches for any names of properties.
+
+```js
+// example
+
+let obj = {
+  mammals: {
+    ape:   { legs: 2 },
+    rhino: { legs: 4 }
+  },
+  birds: {
+    ostrich: { legs: 2 },
+    parrot:  { legs: 2 }
+  },
+  reptiles: {
+    snake:     { legs: 0 },
+    crocodile: { legs: 4 }
+  }
+};
+
+let dug = dig(obj, 'mammals.*.legs');
+```
+
+Just like Array Queries, the function recursively operates for every object that is a direct child of `obj.mammals` in this example. And you get each result stored in `dug.results` array.
+
+```js
+console.log( dug.results[0].found ); // 2
+console.log( dug.results[1].found ); // 4
 ```
 
 ---
