@@ -37,9 +37,11 @@ function dummy() {
 					type:   'album',
 					title:  'Grace',
 					artist: 'Jeff Buckley'
-				}
+				},
+				'xxx_not_an_object_xxx'
 			]
-		}
+		},
+		xxx: 'xxx_not_an_object_xxx'
 	};
 	return r;
 }
@@ -66,6 +68,14 @@ describe(`Function: dig`, () => {
 		assert.equal(r.results[0].found, 'book');
 		assert.equal(r.results[1].found, 'movie');
 		assert.equal(r.results[2].found, 'album');
+	});
+	it(`wildcard`, () => {
+		let r;
+		r = dig(dummy(), '*.age');
+		assert.equal(r.results.length, 3);
+		assert.equal(r.results[0].found, 10);
+		assert.equal(r.results[1].found, 20);
+		assert.equal(r.results[2].found, 30);
 	});
 	describe(`options`, () => {
 		it(`set`, () => {
