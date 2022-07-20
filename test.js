@@ -194,4 +194,26 @@ describe(`Function: dig`, () => {
 			});
 		});
 	});
+	describe(`examples`, () => {
+		it(`Advance usage: Wildcards`, () => {
+			let obj = {
+			  mammals: {
+			    ape:   { legs: 2 },
+			    rhino: { legs: 4 }
+			  },
+			  birds: {
+			    ostrich: { legs: 2 },
+			    parrot:  { legs: 2 }
+			  },
+			  reptiles: {
+			    snake:     { legs: 0 },
+			    crocodile: { legs: 4 }
+			  }
+			};
+
+			let dug = dig(obj, 'mammals.*.legs');
+			assert.equal(dug.results[0].found, 2);
+			assert.equal(dug.results[1].found, 4);
+		});
+	});
 });
