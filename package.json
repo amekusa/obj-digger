@@ -38,7 +38,10 @@
     "url": "git+https://github.com/amekusa/obj-digger.git"
   },
   "keywords": [
+    "util",
     "utility",
+    "general-purpose",
+    "object",
     "dig"
   ],
   "author": "amekusa (amekusa.com)",
