@@ -53,6 +53,7 @@ function dig(obj, path, opts = {}) {
 		return r;
 	}
 	let p = Array.isArray(path) ? path : path.split('.');
+	if (!p.length) return obj;
 	r.path.push(obj);
 
 	for (let i = 0;; i++) {
@@ -79,12 +80,15 @@ function dig(obj, path, opts = {}) {
 					});
 					return r;
 				}
-				// dig each elements in the array
 				r.path.push(obj[iP]);
 				r.results = [];
-				let pRest = p.slice(i + 1);
-				for (let j = 0; j < obj[iP].length; j++) {
-					if (isDiggable(obj[iP][j])) r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
+				if (i == p.length - 1) { // destination
+					for (let j = 0; j < obj[iP].length; j++) r.results.push({found: obj[iP][j]});
+				} else { // dig each element in the array
+					let pRest = p.slice(i + 1);
+					for (let j = 0; j < obj[iP].length; j++) {
+						if (isDiggable(obj[iP][j])) r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
+					}
 				}
 				return r;
 			}
