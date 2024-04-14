@@ -73,18 +73,29 @@ describe(`Function: dig`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[]');
 		assert.equal(r.results.length, 4);
-		assert.equal(r.results[0].found.type, 'book');
-		assert.equal(r.results[1].found.type, 'movie');
-		assert.equal(r.results[2].found.type, 'album');
-		assert.equal(r.results[3].found, 'xxx_not_an_object_xxx');
+		assert.equal(r.results[0].type, 'book');
+		assert.equal(r.results[1].type, 'movie');
+		assert.equal(r.results[2].type, 'album');
+		assert.equal(r.results[3], 'xxx_not_an_object_xxx');
 	});
 	it(`wildcard`, () => {
 		let r;
 		r = dig(dummy(), '*.age');
-		assert.equal(r.results.length, 3);
-		assert.equal(r.results[0].found, 10);
-		assert.equal(r.results[1].found, 20);
-		assert.equal(r.results[2].found, 30);
+		assert.equal(Object.keys(r.results).length, 3);
+		assert.equal(r.results.alice.found,   10);
+		assert.equal(r.results.bob.found,     20);
+		assert.equal(r.results.charlie.found, 30);
+	});
+	it(`wildcard (last)`, () => {
+		let r;
+		r = dig(dummy(), 'alice.*');
+		assert.equal(Object.keys(r.results).length, 3);
+		assert.equal(r.results.age, 10);
+		assert.equal(r.results.sex, 'female');
+		assert.deepEqual(r.results.accounts, {
+			twitter: 'twitter.com/alice123',
+			apple:   'apple.com/alice123'
+		});
 	});
 	describe(`options`, () => {
 		it(`set`, () => {
@@ -204,7 +215,7 @@ describe(`Function: dig`, () => {
 		});
 	});
 	describe(`examples`, () => {
-		it(`Advance usage: Wildcards`, () => {
+		it(`Advanced usage: Wildcards`, () => {
 			let obj = {
 			  mammals: {
 			    ape:   { legs: 2 },
@@ -221,8 +232,8 @@ describe(`Function: dig`, () => {
 			};
 
 			let dug = dig(obj, 'mammals.*.legs');
-			assert.equal(dug.results[0].found, 2);
-			assert.equal(dug.results[1].found, 4);
+			assert.equal(dug.results.ape.found, 2);
+			assert.equal(dug.results.rhino.found, 4);
 		});
 	});
 });
