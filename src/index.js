@@ -58,6 +58,12 @@ function isDiggable(x) {
 	return false;
 }
 
+/**
+ * @param {object} obj - Object to dig into
+ * @param {string|string[]} path - Sequence of property-keys to go through
+ * @param {object} [opts] - Options
+ * @return {object} the result
+ */
 function dig(obj, path, opts = {}) {
 	if (!isDiggable(obj)) {
 		return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
