@@ -59,10 +59,16 @@ function dig(obj, path, opts = {}) {
 
 		if (iP == '*') { // wildcard
 			r.results = [];
-			let pRest = p.slice(i + 1);
 			let keys = Object.keys(obj);
-			for (let j = 0; j < keys.length; j++) {
-				if (isDiggable(obj[keys[j]])) r.results.push(dig(obj[keys[j]], pRest, opts)); // recursion
+			if (i == p.length - 1) {
+				// wildcard destination; add every property to results
+				for (let j = 0; j < keys.length; j++) r.results.push({found: obj[keys[j]]});
+			} else {
+				// wildcard branching; dig every property one by one
+				let pRest = p.slice(i + 1);
+				for (let j = 0; j < keys.length; j++) {
+					if (isDiggable(obj[keys[j]])) r.results.push(dig(obj[keys[j]], pRest, opts)); // recursion
+				}
 			}
 			return r;
 		}
