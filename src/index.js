@@ -128,6 +128,7 @@ function dig(obj, path, opts = {}) {
 			if (i == p.length - 1) { // destination
 				if ('set'    in opts) obj[iP] = opts.set;
 				if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
+				r.key   = iP;
 				r.value = obj[iP];
 				return r;
 			}
@@ -150,6 +151,7 @@ function dig(obj, path, opts = {}) {
 				if (i == p.length - 1) { // destination
 					obj[iP] = ('set' in opts) ? opts.set : opts.default;
 					if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
+					r.key   = iP;
 					r.value = obj[iP];
 					return r;
 				}
