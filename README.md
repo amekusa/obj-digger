@@ -178,11 +178,11 @@ let obj = {
 let dug = dig(obj, 'mammals.*.legs');
 ```
 
-Just like Array Queries, the function recursively operates for every object that is a direct child of `obj.mammals` in this example. And you get each result stored in `dug.results` array.
+Just like Array Queries, the function recursively operates for every object that is a direct child of `obj.mammals` in this example. And you get each result stored in `dug.results` object.
 
 ```js
-console.log( dug.results[0].value ); // 2
-console.log( dug.results[1].value ); // 4
+console.log( dug.results.ape.value );   // 2
+console.log( dug.results.rhino.value ); // 4
 ```
 
 ---
