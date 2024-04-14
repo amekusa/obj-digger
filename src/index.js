@@ -47,15 +47,13 @@ function error(throws, msg, name, info) {
 }
 
 function dig(obj, path, opts = {}) {
-	let r = {path: []};
 	if (!isDiggable(obj)) {
-		r.err = error(opts.throw, `argument is not diggable`, 'InvalidArgument', {value: obj});
-		return r;
+		return {err: error(opts.throw, `argument is not diggable`, 'InvalidArgument', {value: obj})};
 	}
 	let p = Array.isArray(path) ? path : path.split('.');
 	if (!p.length) return obj;
-	r.path.push(obj);
 
+	let r = {path: [obj]};
 	for (let i = 0;; i++) {
 		let iP = p[i];
 
