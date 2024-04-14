@@ -67,7 +67,10 @@ function dig(obj, path, opts = {}) {
 				// wildcard branching; dig every property one by one
 				let pRest = p.slice(i + 1);
 				for (let j = 0; j < keys.length; j++) {
-					if (isDiggable(obj[keys[j]])) r.results[keys[j]] = dig(obj[keys[j]], pRest, opts); // recursion
+					if (isDiggable(obj[keys[j]])) {
+						let dug = dig(obj[keys[j]], pRest, opts); // recursion
+						if (!dug.err) r.results[keys[j]] = dug;
+					}
 				}
 			}
 			return r;
@@ -93,7 +96,10 @@ function dig(obj, path, opts = {}) {
 					// array branching; dig every element
 					let pRest = p.slice(i + 1);
 					for (let j = 0; j < obj[iP].length; j++) {
-						if (isDiggable(obj[iP][j])) r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
+						if (isDiggable(obj[iP][j])) {
+							let dug = dig(obj[iP][j], pRest, opts); // recursion
+							if (!dug.err) r.results.push(dug);
+						}
 					}
 				}
 				return r;
