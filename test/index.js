@@ -50,24 +50,24 @@ describe(`Function: dig`, () => {
 	it(`simply get`, () => {
 		let r;
 		r = dig(dummy(), 'alice');
-		assert.deepEqual(r.found, dummy().alice);
+		assert.deepEqual(r.value, dummy().alice);
 
 		r = dig(dummy(), 'alice.age');
-		assert.equal(r.found, 10);
+		assert.equal(r.value, 10);
 
 		r = dig(dummy(), 'alice.sex');
-		assert.equal(r.found, 'female');
+		assert.equal(r.value, 'female');
 
 		r = dig(dummy(), 'alice.accounts.twitter');
-		assert.equal(r.found, 'twitter.com/alice123');
+		assert.equal(r.value, 'twitter.com/alice123');
 	});
 	it(`array`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[].type');
 		assert.equal(r.results.length, 3);
-		assert.equal(r.results[0].found, 'book');
-		assert.equal(r.results[1].found, 'movie');
-		assert.equal(r.results[2].found, 'album');
+		assert.equal(r.results[0].value, 'book');
+		assert.equal(r.results[1].value, 'movie');
+		assert.equal(r.results[2].value, 'album');
 	});
 	it(`array (last)`, () => {
 		let r;
@@ -82,9 +82,9 @@ describe(`Function: dig`, () => {
 		let r;
 		r = dig(dummy(), '*.age');
 		assert.equal(Object.keys(r.results).length, 3);
-		assert.equal(r.results.alice.found,   10);
-		assert.equal(r.results.bob.found,     20);
-		assert.equal(r.results.charlie.found, 30);
+		assert.equal(r.results.alice.value,   10);
+		assert.equal(r.results.bob.value,     20);
+		assert.equal(r.results.charlie.value, 30);
 	});
 	it(`wildcard (last)`, () => {
 		let r;
@@ -103,15 +103,15 @@ describe(`Function: dig`, () => {
 			let d1 = dummy();
 			let d2 = dummy();
 			r = dig(d2, 'bob.age', { set: 21 });
-			assert.notEqual(r.found, d1.bob.age);
-			assert.equal(r.found, d2.bob.age);
+			assert.notEqual(r.value, d1.bob.age);
+			assert.equal(r.value, d2.bob.age);
 
 			r = dig(dummy(), 'bob.non_existent', { set: 'XXX' });
-			assert.equal(r.found, undefined);
+			assert.equal(r.value, undefined);
 			assert.equal(r.err.name, 'NoSuchKey');
 
 			r = dig(dummy(), 'bob.non_existent', { default: 'XXX' });
-			assert.equal(r.found, undefined);
+			assert.equal(r.value, undefined);
 			assert.equal(r.err.name, 'NoSuchKey');
 		});
 		it(`makePath`, () => {
@@ -232,8 +232,8 @@ describe(`Function: dig`, () => {
 			};
 
 			let dug = dig(obj, 'mammals.*.legs');
-			assert.equal(dug.results.ape.found, 2);
-			assert.equal(dug.results.rhino.found, 4);
+			assert.equal(dug.results.ape.value, 2);
+			assert.equal(dug.results.rhino.value, 4);
 		});
 	});
 });
