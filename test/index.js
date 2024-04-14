@@ -106,22 +106,22 @@ describe(`Function: dig`, () => {
 			let r;
 			let d1 = dummy();
 			let d2 = dummy();
-			r = dig(d2, 'bob.age', { set: 21 });
+			r = dig(d2, 'bob.age', {set: 21});
 			assert.notEqual(r.value, d1.bob.age);
 			assert.equal(r.value, d2.bob.age);
 
-			r = dig(dummy(), 'bob.non_existent', { set: 'XXX' });
+			r = dig(dummy(), 'bob.non_existent', {set: 'XXX'});
 			assert.equal(r.value, undefined);
 			assert.equal(r.err.name, 'NoSuchKey');
 
-			r = dig(dummy(), 'bob.non_existent', { default: 'XXX' });
+			r = dig(dummy(), 'bob.non_existent', {default: 'XXX'});
 			assert.equal(r.value, undefined);
 			assert.equal(r.err.name, 'NoSuchKey');
 		});
 		it(`makePath`, () => {
 			let r;
 			let d = dummy();
-			r = dig(d, 'bob.x.y.z', { makePath: true });
+			r = dig(d, 'bob.x.y.z', {makePath: true});
 			assert.ok('x' in d.bob);
 			assert.equal(typeof d.bob.x, 'object');
 
@@ -145,7 +145,7 @@ describe(`Function: dig`, () => {
 						assert.strictEqual(obj, d.bob.x);
 						assert.equal(key, 'y');
 					}
-					return { n };
+					return {n};
 				}
 			});
 			assert.equal(called, 2);
@@ -156,14 +156,14 @@ describe(`Function: dig`, () => {
 			let r;
 			let d1 = dummy();
 			let d2 = dummy();
-			dig(d2, 'bob.age', { mutate: age => age * 2 });
+			dig(d2, 'bob.age', {mutate: age => age * 2});
 			assert.equal(d2.bob.age, d1.bob.age * 2);
 		});
 	});
 	describe(`error handling`, () => {
 		function checkError(data) {
 			let opts = data.args.length > 2 ? data.args[2] : {};
-			let r = dig(data.args[0], data.args[1], Object.assign(opts, { throw: false }));
+			let r = dig(data.args[0], data.args[1], Object.assign(opts, {throw: false}));
 			// validate error
 			if (data.name) assert.equal(data.name, r.err.name);
 			if (data.info) {
@@ -171,30 +171,30 @@ describe(`Function: dig`, () => {
 			}
 			// check if it throws the exact same error
 			assert.throws(() => {
-				dig(data.args[0], data.args[1], Object.assign(opts, { throw: true }));
+				dig(data.args[0], data.args[1], Object.assign(opts, {throw: true}));
 			}, r.err);
 		}
 		it(`error: InvalidArgument`, () => {
 			checkError({
 				args: ['not_an_object', 'alice.age'],
 				name: 'InvalidArgument',
-				info: { value: 'not_an_object' }
+				info: {value: 'not_an_object'}
 			});
 		});
 		it(`error: NoSuchKey`, () => {
 			checkError({
 				args: [dummy(), 'non_existent'],
-				info: { key: 'non_existent' }
+				info: {key: 'non_existent'}
 			});
 			checkError({
 				args: [dummy(), 'alice.non_existent'],
 				name: 'NoSuchKey',
-				info: { key: 'non_existent' }
+				info: {key: 'non_existent'}
 			});
 			checkError({
 				args: [dummy(), 'alice.accounts.non_existent'],
 				name: 'NoSuchKey',
-				info: { key: 'non_existent' }
+				info: {key: 'non_existent'}
 			});
 		});
 		it(`error: TypeMismatch`, () => {
