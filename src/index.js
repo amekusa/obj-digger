@@ -62,7 +62,7 @@ function dig(obj, path, opts = {}) {
 			let keys = Object.keys(obj);
 			if (i == p.length - 1) {
 				// wildcard destination; add every property to results
-				for (let j = 0; j < keys.length; j++) r.results[keys[j]] = {found: obj[keys[j]]};
+				for (let j = 0; j < keys.length; j++) r.results[keys[j]] = obj[keys[j]];
 			} else {
 				// wildcard branching; dig every property one by one
 				let pRest = p.slice(i + 1);
@@ -88,7 +88,7 @@ function dig(obj, path, opts = {}) {
 				r.results = [];
 				if (i == p.length - 1) {
 					// array destination; add every element to results
-					for (let j = 0; j < obj[iP].length; j++) r.results.push({found: obj[iP][j]});
+					for (let j = 0; j < obj[iP].length; j++) r.results.push(obj[iP][j]);
 				} else {
 					// array branching; dig every element
 					let pRest = p.slice(i + 1);
