@@ -1,6 +1,6 @@
 /*!
  *  obj-digger
- * ------------ ---- -  *
+ * ------------ *
  *  Safely access properties of deeply nested objects
  *  @author Satoshi Soma (https://amekusa.com)
  * =================================================== *
@@ -86,9 +86,11 @@ function dig(obj, path, opts = {}) {
 				}
 				r.path.push(obj[iP]);
 				r.results = [];
-				if (i == p.length - 1) { // destination
+				if (i == p.length - 1) {
+					// array destination; add every element to results
 					for (let j = 0; j < obj[iP].length; j++) r.results.push({found: obj[iP][j]});
-				} else { // dig each element in the array
+				} else {
+					// array branching; dig every element
 					let pRest = p.slice(i + 1);
 					for (let j = 0; j < obj[iP].length; j++) {
 						if (isDiggable(obj[iP][j])) r.results.push(dig(obj[iP][j], pRest, opts)); // recursion
