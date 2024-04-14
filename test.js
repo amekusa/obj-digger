@@ -1,5 +1,5 @@
-const assert = require('assert');
-const dig = require('./index.js');
+import assert from 'node:assert';
+import dig from './src/index.js';
 
 function dummy() {
 	let r = {

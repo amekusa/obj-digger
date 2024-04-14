@@ -1,12 +1,14 @@
-const config = {
+import {env} from 'node:process';
+const prod = env.NODE_ENV == 'production';
+
+export default {
 	input: 'src/index.js',
 	output: {
-		file: './index.js',
-		format: 'umd',
 		name: 'obj-digger',
-		sourcemap: true,
-		validate: true
+		file: 'dist/index.cjs',
+		format: 'cjs',
+		sourcemap: !prod,
+		validate: prod,
 	}
 };
 
-export default config;
