@@ -29,6 +29,26 @@
  *
  */
 
+function error(throws, name, info) {
+	if (!throws) return {name, info};
+	let msg = '';
+	switch (name) {
+	case 'InvalidArgument':
+		msg = `argument is not diggable`;
+		break;
+	case 'NoSuchKey':
+		msg = `property '${info.key}' is not found`;
+		break;
+	case 'TypeMismatch':
+		msg = `unexpected type of value`;
+		break;
+	}
+	let e = new Error(msg);
+	e.name = name;
+	e.info = info;
+	throw e;
+}
+
 function isDiggable(x) {
 	switch (typeof x) {
 	case 'object':
@@ -38,17 +58,9 @@ function isDiggable(x) {
 	return false;
 }
 
-function error(throws, msg, name, info) {
-	let r = new Error(msg);
-	if (name) r.name = name;
-	if (info) r.info = info;
-	if (throws) throw r;
-	return r;
-}
-
 function dig(obj, path, opts = {}) {
 	if (!isDiggable(obj)) {
-		return {err: error(opts.throw, `argument is not diggable`, 'InvalidArgument', {value: obj})};
+		return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
 	}
 	let p = Array.isArray(path) ? path : path.split('.');
 	if (!p.length) return obj;
@@ -80,7 +92,7 @@ function dig(obj, path, opts = {}) {
 			iP = iP.substring(0, iP.length - 2);
 			if (iP in obj) {
 				if (!Array.isArray(obj[iP])) { // not an array
-					r.err = error(opts.throw, `property '${iP}' is not an array`, 'TypeMismatch', {
+					r.err = error(opts.throw, 'TypeMismatch', {
 						path: r.path,
 						key: iP, value: obj[iP],
 						expectedType: 'Array'
@@ -105,7 +117,7 @@ function dig(obj, path, opts = {}) {
 				return r;
 			}
 			// path not found
-			r.err = error(opts.throw, `property '${iP}' is not found`, 'NoSuchKey', {
+			r.err = error(opts.throw, 'NoSuchKey', {
 				path: r.path,
 				key: iP
 			});
@@ -124,7 +136,7 @@ function dig(obj, path, opts = {}) {
 				r.path.push(obj);
 
 			} else { // not diggable
-				r.err = error(opts.throw, `property '${iP}' is not an object`, 'TypeMismatch', {
+				r.err = error(opts.throw, 'TypeMismatch', {
 					path: r.path,
 					key: iP, value: obj[iP],
 					expectedType: 'object'
@@ -148,7 +160,7 @@ function dig(obj, path, opts = {}) {
 			}
 
 		} else { // Path Not Found
-			r.err = error(opts.throw, `property '${iP}' is not found`, 'NoSuchKey', {
+			r.err = error(opts.throw, 'NoSuchKey', {
 				path: r.path,
 				key: iP
 			});
