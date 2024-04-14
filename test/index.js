@@ -50,15 +50,19 @@ describe(`Function: dig`, () => {
 	it(`simply get`, () => {
 		let r;
 		r = dig(dummy(), 'alice');
+		assert.equal(r.key, 'alice');
 		assert.deepEqual(r.value, dummy().alice);
 
 		r = dig(dummy(), 'alice.age');
+		assert.equal(r.key, 'age');
 		assert.equal(r.value, 10);
 
 		r = dig(dummy(), 'alice.sex');
+		assert.equal(r.key, 'sex');
 		assert.equal(r.value, 'female');
 
 		r = dig(dummy(), 'alice.accounts.twitter');
+		assert.equal(r.key, 'twitter');
 		assert.equal(r.value, 'twitter.com/alice123');
 	});
 	it(`array`, () => {
