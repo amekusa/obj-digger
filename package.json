@@ -1,6 +1,6 @@
 {
   "name": "obj-digger",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Safely access properties of deeply nested objects",
   "type": "module",
   "files": [
