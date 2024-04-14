@@ -1,6 +1,6 @@
 /*!
  *  obj-digger
- * ------------ *
+ * ------------ -
  *  Safely access properties of deeply nested objects
  *  @author Satoshi Soma (https://amekusa.com)
  * =================================================== *
@@ -57,7 +57,7 @@ function dig(obj, path, opts = {}) {
 	for (let i = 0;; i++) {
 		let iP = p[i];
 
-		if (iP == '*') { // wildcard
+		if (iP == '*') { // Path: Wildcard
 			r.results = {};
 			let keys = Object.keys(obj);
 			if (i == p.length - 1) {
@@ -73,7 +73,7 @@ function dig(obj, path, opts = {}) {
 			return r;
 		}
 
-		if (iP.endsWith('[]')) { // array access
+		if (iP.endsWith('[]')) { // Path: Array
 			iP = iP.substring(0, iP.length - 2);
 			if (iP in obj) {
 				if (!Array.isArray(obj[iP])) { // not an array
@@ -106,7 +106,7 @@ function dig(obj, path, opts = {}) {
 			return r;
 		}
 
-		if (iP in obj) { // path found
+		if (iP in obj) { // Path Found
 			if (i == p.length - 1) { // destination
 				if ('set'    in opts) obj[iP] = opts.set;
 				if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
@@ -126,7 +126,7 @@ function dig(obj, path, opts = {}) {
 				return r;
 			}
 
-		} else if (opts.makePath) { // make path
+		} else if (opts.makePath) { // Make Path
 			for (;; i++) {
 				iP = p[i];
 				if (i == p.length - 1) { // destination
@@ -141,7 +141,7 @@ function dig(obj, path, opts = {}) {
 				r.path.push(obj);
 			}
 
-		} else { // path not found
+		} else { // Path Not Found
 			r.err = error(opts.throw, `property '${iP}' is not found`, 'NoSuchKey', {
 				path: r.path,
 				key: iP
