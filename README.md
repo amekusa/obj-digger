@@ -1,5 +1,5 @@
 # OBJ-DIGGER
-[![NPM Version](https://img.shields.io/npm/v/obj-digger?style=for-the-badge&label=npm%20package)](https://www.npmjs.com/package/obj-digger) [![NPM License](https://img.shields.io/npm/l/obj-digger?style=for-the-badge)](https://github.com/amekusa/obj-digger/blob/master/LICENSE) [![codecov](https://codecov.io/gh/amekusa/obj-digger/branch/master/graph/badge.svg?token=LYU3ZAOR84)](https://codecov.io/gh/amekusa/obj-digger)
+[![NPM Version](https://img.shields.io/npm/v/obj-digger?label=npm%20package)](https://www.npmjs.com/package/obj-digger) [![NPM License](https://img.shields.io/npm/l/obj-digger)](https://github.com/amekusa/obj-digger/blob/master/LICENSE) [![codecov](https://codecov.io/gh/amekusa/obj-digger/branch/master/graph/badge.svg?token=LYU3ZAOR84)](https://codecov.io/gh/amekusa/obj-digger)
 
 Safely access the properties of deeply nested objects.
 
