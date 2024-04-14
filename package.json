@@ -22,8 +22,8 @@
   "watch": {
     "test": {
       "patterns": [
-        "test.js",
-        "src"
+        "src",
+        "test"
       ],
       "inherit": true
     },

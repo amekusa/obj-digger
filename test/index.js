@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import dig from './src/index.js';
+import dig from '../src/index.js';
 
 function dummy() {
 	let r = {
@@ -68,6 +68,15 @@ describe(`Function: dig`, () => {
 		assert.equal(r.results[0].found, 'book');
 		assert.equal(r.results[1].found, 'movie');
 		assert.equal(r.results[2].found, 'album');
+	});
+	it(`array (last)`, () => {
+		let r;
+		r = dig(dummy(), 'charlie.wishlist[]');
+		assert.equal(r.results.length, 4);
+		assert.equal(r.results[0].found.type, 'book');
+		assert.equal(r.results[1].found.type, 'movie');
+		assert.equal(r.results[2].found.type, 'album');
+		assert.equal(r.results[3].found, 'xxx_not_an_object_xxx');
 	});
 	it(`wildcard`, () => {
 		let r;
