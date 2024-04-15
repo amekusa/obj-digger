@@ -91,7 +91,7 @@ function dig(obj, path, opts = {}) {
 					}
 				}
 			}
-			r.results = r.found; // alias of 'found'
+			r.results = r.found; // @deprecated alias of 'found'
 			return r;
 		}
 
@@ -121,7 +121,7 @@ function dig(obj, path, opts = {}) {
 						}
 					}
 				}
-				r.results = r.found; // alias of 'found'
+				r.results = r.found; // @deprecated alias of 'found'
 				return r;
 			}
 			// path not found
