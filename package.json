@@ -41,7 +41,8 @@
     "utility",
     "general-purpose",
     "object",
-    "dig"
+    "dig",
+    "json"
   ],
   "author": "amekusa (amekusa.com)",
   "license": "MIT",
