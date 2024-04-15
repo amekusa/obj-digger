@@ -68,35 +68,35 @@ describe(`Function: dig`, () => {
 	it(`array`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[].type');
-		assert.equal(r.results.length, 3);
-		assert.equal(r.results[0].value, 'book');
-		assert.equal(r.results[1].value, 'movie');
-		assert.equal(r.results[2].value, 'album');
+		assert.equal(r.found.length, 3);
+		assert.equal(r.found[0].value, 'book');
+		assert.equal(r.found[1].value, 'movie');
+		assert.equal(r.found[2].value, 'album');
 	});
 	it(`array (last)`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[]');
-		assert.equal(r.results.length, 4);
-		assert.equal(r.results[0].type, 'book');
-		assert.equal(r.results[1].type, 'movie');
-		assert.equal(r.results[2].type, 'album');
-		assert.equal(r.results[3], 'xxx_not_an_object_xxx');
+		assert.equal(r.found.length, 4);
+		assert.equal(r.found[0].type, 'book');
+		assert.equal(r.found[1].type, 'movie');
+		assert.equal(r.found[2].type, 'album');
+		assert.equal(r.found[3], 'xxx_not_an_object_xxx');
 	});
 	it(`wildcard`, () => {
 		let r;
 		r = dig(dummy(), '*.age');
-		assert.equal(Object.keys(r.results).length, 3);
-		assert.equal(r.results.alice.value,   10);
-		assert.equal(r.results.bob.value,     20);
-		assert.equal(r.results.charlie.value, 30);
+		assert.equal(Object.keys(r.found).length, 3);
+		assert.equal(r.found.alice.value,   10);
+		assert.equal(r.found.bob.value,     20);
+		assert.equal(r.found.charlie.value, 30);
 	});
 	it(`wildcard (last)`, () => {
 		let r;
 		r = dig(dummy(), 'alice.*');
-		assert.equal(Object.keys(r.results).length, 3);
-		assert.equal(r.results.age, 10);
-		assert.equal(r.results.sex, 'female');
-		assert.deepEqual(r.results.accounts, {
+		assert.equal(Object.keys(r.found).length, 3);
+		assert.equal(r.found.age, 10);
+		assert.equal(r.found.sex, 'female');
+		assert.deepEqual(r.found.accounts, {
 			twitter: 'twitter.com/alice123',
 			apple:   'apple.com/alice123'
 		});
@@ -236,8 +236,8 @@ describe(`Function: dig`, () => {
 			};
 
 			let dug = dig(obj, 'mammals.*.legs');
-			assert.equal(dug.results.ape.value, 2);
-			assert.equal(dug.results.rhino.value, 4);
+			assert.equal(dug.found.ape.value, 2);
+			assert.equal(dug.found.rhino.value, 4);
 		});
 	});
 });
