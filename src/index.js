@@ -73,7 +73,7 @@ function dig(obj, path, opts = {}) {
 
 	let r = {path: [obj]};
 	for (let i = 0;; i++) {
-		let p = path[i];
+		let p = path[i]; // pick up a crumb
 
 		if (p == '*') { // Path: Wildcard
 			r.found = {};
@@ -83,10 +83,10 @@ function dig(obj, path, opts = {}) {
 				for (let j = 0; j < keys.length; j++) r.found[keys[j]] = obj[keys[j]];
 			} else {
 				// wildcard branching; dig every property one by one
-				let pRest = path.slice(i + 1);
+				path = path.slice(i + 1); // remaining crumbs to pick up
 				for (let j = 0; j < keys.length; j++) {
 					if (isDiggable(obj[keys[j]])) {
-						let dug = dig(obj[keys[j]], pRest, opts); // recursion
+						let dug = dig(obj[keys[j]], path, opts); // recursion
 						if (!dug.err) r.found[keys[j]] = dug;
 					}
 				}
@@ -115,10 +115,10 @@ function dig(obj, path, opts = {}) {
 					for (let j = 0; j < obj.length; j++) r.found.push(obj[j]);
 				} else {
 					// array branching; dig every element
-					let pRest = path.slice(i + 1);
+					path = path.slice(i + 1); // remaining crumbs to pick up
 					for (let j = 0; j < obj.length; j++) {
 						if (isDiggable(obj[j])) {
-							let dug = dig(obj[j], pRest, opts); // recursion
+							let dug = dig(obj[j], path, opts); // recursion
 							if (!dug.err) r.found.push(dug);
 						}
 					}
