@@ -73,9 +73,9 @@ function dig(obj, path, opts = {}) {
 
 	let r = {path: [obj]};
 	for (let i = 0;; i++) {
-		let iP = path[i];
+		let p = path[i];
 
-		if (iP == '*') { // Path: Wildcard
+		if (p == '*') { // Path: Wildcard
 			r.found = {};
 			let keys = Object.keys(obj);
 			if (i == path.length - 1) {
@@ -95,29 +95,29 @@ function dig(obj, path, opts = {}) {
 			return r;
 		}
 
-		if (iP.endsWith('[]')) { // Path: Array
-			iP = iP.substring(0, iP.length - 2);
-			if (iP in obj) {
-				if (!Array.isArray(obj[iP])) { // not an array
+		if (p.endsWith('[]')) { // Path: Array
+			p = p.substring(0, p.length - 2);
+			if (p in obj) {
+				if (!Array.isArray(obj[p])) { // not an array
 					r.err = error(opts.throw, 'TypeMismatch', {
 						path: r.path,
-						key: iP,
-						value: obj[iP],
+						key: p,
+						value: obj[p],
 						expectedType: 'Array'
 					});
 					return r;
 				}
-				r.path.push(obj[iP]);
+				r.path.push(obj[p]);
 				r.found = [];
 				if (i == path.length - 1) {
 					// array destination; add every element to results
-					for (let j = 0; j < obj[iP].length; j++) r.found.push(obj[iP][j]);
+					for (let j = 0; j < obj[p].length; j++) r.found.push(obj[p][j]);
 				} else {
 					// array branching; dig every element
 					let pRest = path.slice(i + 1);
-					for (let j = 0; j < obj[iP].length; j++) {
-						if (isDiggable(obj[iP][j])) {
-							let dug = dig(obj[iP][j], pRest, opts); // recursion
+					for (let j = 0; j < obj[p].length; j++) {
+						if (isDiggable(obj[p][j])) {
+							let dug = dig(obj[p][j], pRest, opts); // recursion
 							if (!dug.err) r.found.push(dug);
 						}
 					}
@@ -128,28 +128,28 @@ function dig(obj, path, opts = {}) {
 			// path not found
 			r.err = error(opts.throw, 'NoSuchKey', {
 				path: r.path,
-				key: iP
+				key: p
 			});
 			return r;
 		}
 
-		if (iP in obj) { // Path Found
+		if (p in obj) { // Path Found
 			if (i == path.length - 1) { // destination
-				if ('set'    in opts) obj[iP] = opts.set;
-				if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
-				r.key   = iP;
-				r.value = obj[iP];
+				if ('set'    in opts) obj[p] = opts.set;
+				if ('mutate' in opts) obj[p] = opts.mutate(obj[p]);
+				r.key   = p;
+				r.value = obj[p];
 				return r;
 			}
-			if (isDiggable(obj[iP])) { // dig
-				obj = obj[iP];
+			if (isDiggable(obj[p])) { // dig
+				obj = obj[p];
 				r.path.push(obj);
 
 			} else { // not diggable
 				r.err = error(opts.throw, 'TypeMismatch', {
 					path: r.path,
-					key: iP,
-					value: obj[iP],
+					key: p,
+					value: obj[p],
 					expectedType: 'object'
 				});
 				return r;
@@ -157,24 +157,24 @@ function dig(obj, path, opts = {}) {
 
 		} else if (opts.makePath) { // Make Path
 			for (;; i++) {
-				iP = path[i];
+				p = path[i];
 				if (i == path.length - 1) { // destination
-					obj[iP] = ('set' in opts) ? opts.set : opts.default;
-					if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
-					r.key   = iP;
-					r.value = obj[iP];
+					obj[p] = ('set' in opts) ? opts.set : opts.default;
+					if ('mutate' in opts) obj[p] = opts.mutate(obj[p]);
+					r.key   = p;
+					r.value = obj[p];
 					return r;
 				}
 				// make the rest of the path
-				obj[iP] = (opts.makePath === true) ? {} : opts.makePath(obj, iP, i);
-				obj = obj[iP];
+				obj[p] = (opts.makePath === true) ? {} : opts.makePath(obj, p, i);
+				obj = obj[p];
 				r.path.push(obj);
 			}
 
 		} else { // Path Not Found
 			r.err = error(opts.throw, 'NoSuchKey', {
 				path: r.path,
-				key: iP
+				key: p
 			});
 			return r;
 		}
