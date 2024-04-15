@@ -68,7 +68,7 @@ function dig(obj, path, opts = {}) {
 	if (!isDiggable(obj)) {
 		return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
 	}
-	path = Array.isArray(path) ? path : path.split('.');
+	if (!Array.isArray(path)) path = path.split('.');
 	if (!path.length) return obj;
 
 	let r = {path: [obj]};
