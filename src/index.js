@@ -76,21 +76,22 @@ function dig(obj, path, opts = {}) {
 		let iP = p[i];
 
 		if (iP == '*') { // Path: Wildcard
-			r.results = {};
+			r.found = {};
 			let keys = Object.keys(obj);
 			if (i == p.length - 1) {
 				// wildcard destination; add every property to results
-				for (let j = 0; j < keys.length; j++) r.results[keys[j]] = obj[keys[j]];
+				for (let j = 0; j < keys.length; j++) r.found[keys[j]] = obj[keys[j]];
 			} else {
 				// wildcard branching; dig every property one by one
 				let pRest = p.slice(i + 1);
 				for (let j = 0; j < keys.length; j++) {
 					if (isDiggable(obj[keys[j]])) {
 						let dug = dig(obj[keys[j]], pRest, opts); // recursion
-						if (!dug.err) r.results[keys[j]] = dug;
+						if (!dug.err) r.found[keys[j]] = dug;
 					}
 				}
 			}
+			r.results = r.found; // alias of 'found'
 			return r;
 		}
 
@@ -106,20 +107,21 @@ function dig(obj, path, opts = {}) {
 					return r;
 				}
 				r.path.push(obj[iP]);
-				r.results = [];
+				r.found = [];
 				if (i == p.length - 1) {
 					// array destination; add every element to results
-					for (let j = 0; j < obj[iP].length; j++) r.results.push(obj[iP][j]);
+					for (let j = 0; j < obj[iP].length; j++) r.found.push(obj[iP][j]);
 				} else {
 					// array branching; dig every element
 					let pRest = p.slice(i + 1);
 					for (let j = 0; j < obj[iP].length; j++) {
 						if (isDiggable(obj[iP][j])) {
 							let dug = dig(obj[iP][j], pRest, opts); // recursion
-							if (!dug.err) r.results.push(dug);
+							if (!dug.err) r.found.push(dug);
 						}
 					}
 				}
+				r.results = r.found; // alias of 'found'
 				return r;
 			}
 			// path not found
