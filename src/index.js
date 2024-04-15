@@ -58,6 +58,12 @@ function isDiggable(x) {
 	return false;
 }
 
+function modify(obj, key, opts) {
+	if ('set' in opts) obj[key] = opts.set;
+	if (opts.mutate) obj[key] = opts.mutate(obj[key]);
+	return obj;
+}
+
 /**
  * @param {object} obj - Object to dig into
  * @param {string|string[]} path - Sequence of property-keys to go through
@@ -136,8 +142,7 @@ function dig(obj, path, opts = {}) {
 
 		if (p in obj) { // Path Found
 			if (i == path.length - 1) { // destination
-				if ('set'    in opts) obj[p] = opts.set;
-				if ('mutate' in opts) obj[p] = opts.mutate(obj[p]);
+				modify(obj, p, opts);
 				r.key   = p;
 				r.value = obj[p];
 				return r;
@@ -160,8 +165,8 @@ function dig(obj, path, opts = {}) {
 			for (;; i++) {
 				p = path[i];
 				if (i == path.length - 1) { // destination
-					obj[p] = ('set' in opts) ? opts.set : opts.default;
-					if ('mutate' in opts) obj[p] = opts.mutate(obj[p]);
+					obj[p] = undefined;
+					modify(obj, p, opts);
 					r.key   = p;
 					r.value = obj[p];
 					return r;
