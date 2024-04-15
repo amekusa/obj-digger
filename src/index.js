@@ -68,22 +68,22 @@ function dig(obj, path, opts = {}) {
 	if (!isDiggable(obj)) {
 		return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
 	}
-	let p = Array.isArray(path) ? path : path.split('.');
-	if (!p.length) return obj;
+	path = Array.isArray(path) ? path : path.split('.');
+	if (!path.length) return obj;
 
 	let r = {path: [obj]};
 	for (let i = 0;; i++) {
-		let iP = p[i];
+		let iP = path[i];
 
 		if (iP == '*') { // Path: Wildcard
 			r.found = {};
 			let keys = Object.keys(obj);
-			if (i == p.length - 1) {
+			if (i == path.length - 1) {
 				// wildcard destination; add every property to results
 				for (let j = 0; j < keys.length; j++) r.found[keys[j]] = obj[keys[j]];
 			} else {
 				// wildcard branching; dig every property one by one
-				let pRest = p.slice(i + 1);
+				let pRest = path.slice(i + 1);
 				for (let j = 0; j < keys.length; j++) {
 					if (isDiggable(obj[keys[j]])) {
 						let dug = dig(obj[keys[j]], pRest, opts); // recursion
@@ -109,12 +109,12 @@ function dig(obj, path, opts = {}) {
 				}
 				r.path.push(obj[iP]);
 				r.found = [];
-				if (i == p.length - 1) {
+				if (i == path.length - 1) {
 					// array destination; add every element to results
 					for (let j = 0; j < obj[iP].length; j++) r.found.push(obj[iP][j]);
 				} else {
 					// array branching; dig every element
-					let pRest = p.slice(i + 1);
+					let pRest = path.slice(i + 1);
 					for (let j = 0; j < obj[iP].length; j++) {
 						if (isDiggable(obj[iP][j])) {
 							let dug = dig(obj[iP][j], pRest, opts); // recursion
@@ -134,7 +134,7 @@ function dig(obj, path, opts = {}) {
 		}
 
 		if (iP in obj) { // Path Found
-			if (i == p.length - 1) { // destination
+			if (i == path.length - 1) { // destination
 				if ('set'    in opts) obj[iP] = opts.set;
 				if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
 				r.key   = iP;
@@ -157,8 +157,8 @@ function dig(obj, path, opts = {}) {
 
 		} else if (opts.makePath) { // Make Path
 			for (;; i++) {
-				iP = p[i];
-				if (i == p.length - 1) { // destination
+				iP = path[i];
+				if (i == path.length - 1) { // destination
 					obj[iP] = ('set' in opts) ? opts.set : opts.default;
 					if ('mutate' in opts) obj[iP] = opts.mutate(obj[iP]);
 					r.key   = iP;
