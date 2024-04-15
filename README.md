@@ -188,7 +188,7 @@ console.log( dug.results.rhino.value ); // 4
 ---
 
 > “Let me guess, digging!”
-> &mdash One tunneler
+> &mdash; One tunneler
 
 
 ## License
