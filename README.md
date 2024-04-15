@@ -26,7 +26,7 @@ const dig = require('obj-digger');
 *obj-digger* is just a single function.
 
 ```js
-// example
+// Basic Usage
 
 let obj = {
   Alice: {
@@ -44,15 +44,17 @@ let obj = {
 };
 
 let dug = dig(obj, 'Alice.accounts.twitter');
+console.log( dug.key );   // 'twitter'
 console.log( dug.value ); // 'alice123'
 
 // Using object destructuring:
-let { value } = dig(obj, 'Alice.accounts.twitter');
+let { key, value } = dig(obj, 'Alice.accounts.twitter');
+console.log( key );   // 'twitter'
 console.log( value ); // 'alice123'
 ```
 
 The 2nd parameter is the **query** pointing at the property you want to access.
-If the property was not found, the returned object gets to have **`err`** property.
+If the property was not found, the returned object gets to have **`err`** object.
 
 ```js
 let dug = dig(obj, 'Alice.accounts.tiktok');
@@ -117,7 +119,7 @@ try {
 If you want to dig **multiple objects in an array** like this:
 
 ```js
-// example
+// Example
 
 let obj = {
   items: [ // array
@@ -145,12 +147,15 @@ let dug = dig(obj, 'items[].type');
 ```
 
 The return value, at this time, has a bit different structure.
-The function **recusively operates** for each object in the array, and stores each result into **`results`** property of the return value.
+The function **recusively operates** for each object in the array, and stores each result into **`found`** property of the return value.
 
 ```js
+console.log( dug.found[0].value ); // 'book'
+console.log( dug.found[1].value ); // 'movie'
+console.log( dug.found[2].value ); // 'album'
+
+// 'results' is deprecated, but still usable as an alias of 'found'
 console.log( dug.results[0].value ); // 'book'
-console.log( dug.results[1].value ); // 'movie'
-console.log( dug.results[2].value ); // 'album'
 ```
 
 
@@ -158,7 +163,7 @@ console.log( dug.results[2].value ); // 'album'
 You can use **asterisk `*`** character in the query as **a wildcard** which matches for any names of properties.
 
 ```js
-// example
+// Example
 
 let obj = {
   mammals: {
@@ -178,16 +183,16 @@ let obj = {
 let dug = dig(obj, 'mammals.*.legs');
 ```
 
-Just like Array Queries, the function recursively operates for every object that is a direct child of `obj.mammals` in this example. And you get each result stored in `dug.results` object.
+Just like Array Queries, the function recursively operates for every object that is a direct child of `obj.mammals` in this example. And you get each result stored in `dug.found` object.
 
 ```js
-console.log( dug.results.ape.value );   // 2
-console.log( dug.results.rhino.value ); // 4
+console.log( dug.found.ape.value );   // 2
+console.log( dug.found.rhino.value ); // 4
 ```
 
 ---
 
-> “Let me guess, digging!”
+> “Let me guess… Diggin'!”
 > &mdash; One tunneler
 
 
@@ -216,6 +221,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
-
-2022 &copy; Satoshi Soma ([amekusa.com](https://amekusa.com))
 
