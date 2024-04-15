@@ -98,26 +98,27 @@ function dig(obj, path, opts = {}) {
 		if (p.endsWith('[]')) { // Path: Array
 			p = p.substring(0, p.length - 2);
 			if (p in obj) {
-				if (!Array.isArray(obj[p])) { // not an array
+				obj = obj[p];
+				if (!Array.isArray(obj)) { // not an array
 					r.err = error(opts.throw, 'TypeMismatch', {
 						path: r.path,
 						key: p,
-						value: obj[p],
+						value: obj,
 						expectedType: 'Array'
 					});
 					return r;
 				}
-				r.path.push(obj[p]);
+				r.path.push(obj);
 				r.found = [];
 				if (i == path.length - 1) {
 					// array destination; add every element to results
-					for (let j = 0; j < obj[p].length; j++) r.found.push(obj[p][j]);
+					for (let j = 0; j < obj.length; j++) r.found.push(obj[j]);
 				} else {
 					// array branching; dig every element
 					let pRest = path.slice(i + 1);
-					for (let j = 0; j < obj[p].length; j++) {
-						if (isDiggable(obj[p][j])) {
-							let dug = dig(obj[p][j], pRest, opts); // recursion
+					for (let j = 0; j < obj.length; j++) {
+						if (isDiggable(obj[j])) {
+							let dug = dig(obj[j], pRest, opts); // recursion
 							if (!dug.err) r.found.push(dug);
 						}
 					}
