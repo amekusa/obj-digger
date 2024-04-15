@@ -101,7 +101,8 @@ function dig(obj, path, opts = {}) {
 				if (!Array.isArray(obj[iP])) { // not an array
 					r.err = error(opts.throw, 'TypeMismatch', {
 						path: r.path,
-						key: iP, value: obj[iP],
+						key: iP,
+						value: obj[iP],
 						expectedType: 'Array'
 					});
 					return r;
@@ -147,7 +148,8 @@ function dig(obj, path, opts = {}) {
 			} else { // not diggable
 				r.err = error(opts.throw, 'TypeMismatch', {
 					path: r.path,
-					key: iP, value: obj[iP],
+					key: iP,
+					value: obj[iP],
 					expectedType: 'object'
 				});
 				return r;
