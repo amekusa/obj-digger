@@ -53,7 +53,7 @@ console.log( key );   // 'twitter'
 console.log( value ); // 'alice123'
 ```
 
-The 2nd parameter is a **query** taht points at the property you want to access.
+The 2nd parameter is a **query** that points at the property you want to access.
 If the property was not found, the returned object gets to have **`err`** object.
 
 ```js
@@ -61,8 +61,14 @@ let dug = dig(obj, 'Alice.accounts.tiktok');
 if (dug.err) console.error( dug.err.name ); // 'NoSuchKey'
 ```
 
+A query can also be an array:
 
-## Advanced usage: OPTIONS
+```js
+let dug = dig(obj, ['Alice', 'accounts', 'twitter']);
+```
+
+
+## Advanced usage: Options
 There is the optional 3rd parameter: **options** which enables you to easily manipulate deeply nested objects.
 
 ### `options.set`
@@ -86,6 +92,26 @@ console.log( obj.Charlie ); // { age: 40 }
 ```
 
 This creates the object `obj.Charlie` which didn't exist, and assigns `40` to `obj.Charlie.age`.
+
+Your can also pass a function that returns a custom object:
+
+```js
+dig(obj, 'Charlie.age', {
+  makePath(obj, prop, depth) {
+    //   obj: the current object
+    //  prop: the property name
+    // depth: the current nesting level
+    let person new Person();
+    person.foo = 'bar';
+    return person;
+  },
+  set: 40
+});
+
+console.log( obj.Charlie.age ); // 40
+console.log( obj.Charlie.foo ); // 'bar'
+console.log( obj.Charlie instanceof Person ) // true
+```
 
 ---
 
