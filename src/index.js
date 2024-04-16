@@ -71,12 +71,13 @@ function modify(obj, key, opts) {
  * @return {object} the result
  */
 function dig(obj, path, opts = {}) {
-	if (!isDiggable(obj)) {
-		return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
-	}
+	if (!isDiggable(obj)) return {err: error(opts.throw, 'InvalidArgument', {value: obj})};
 	if (!Array.isArray(path)) path = path.split('.');
 	if (!path.length) return obj;
+	return _dig(obj, path, opts);
+}
 
+function _dig(obj, path, opts) {
 	let r = {path: [obj]};
 	let last = path.length - 1;
 	for (let i = 0;; i++) {
@@ -96,7 +97,7 @@ function dig(obj, path, opts = {}) {
 				path = path.slice(i + 1); // remaining crumbs to pick up
 				for (let j = 0; j < keys.length; j++) {
 					if (isDiggable(obj[keys[j]])) {
-						let dug = dig(obj[keys[j]], path, opts); // recursion
+						let dug = _dig(obj[keys[j]], path, opts); // recursion
 						if (!dug.err) r.found[keys[j]] = dug;
 					}
 				}
@@ -131,7 +132,7 @@ function dig(obj, path, opts = {}) {
 					path = path.slice(i + 1); // remaining crumbs to pick up
 					for (let j = 0; j < obj.length; j++) {
 						if (isDiggable(obj[j])) {
-							let dug = dig(obj[j], path, opts); // recursion
+							let dug = _dig(obj[j], path, opts); // recursion
 							if (!dug.err) r.found.push(dug);
 						}
 					}
@@ -195,3 +196,4 @@ function dig(obj, path, opts = {}) {
 }
 
 export default dig;
+
