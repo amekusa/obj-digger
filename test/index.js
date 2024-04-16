@@ -1,4 +1,13 @@
 import assert from 'node:assert';
+const {
+	ok,
+	equal: eq,
+	deepEqual: deq,
+	strictEqual: seq,
+	deepStrictEqual: dseq,
+	notEqual: neq,
+} = assert;
+
 import dig from '../src/index.js';
 
 function dummy() {
@@ -50,53 +59,53 @@ describe(`Function: dig`, () => {
 	it(`simply get`, () => {
 		let r;
 		r = dig(dummy(), 'alice');
-		assert.equal(r.key, 'alice');
-		assert.deepEqual(r.value, dummy().alice);
+		eq(r.key, 'alice');
+		deq(r.value, dummy().alice);
 
 		r = dig(dummy(), 'alice.age');
-		assert.equal(r.key, 'age');
-		assert.equal(r.value, 10);
+		eq(r.key, 'age');
+		eq(r.value, 10);
 
 		r = dig(dummy(), 'alice.sex');
-		assert.equal(r.key, 'sex');
-		assert.equal(r.value, 'female');
+		eq(r.key, 'sex');
+		eq(r.value, 'female');
 
 		r = dig(dummy(), 'alice.accounts.twitter');
-		assert.equal(r.key, 'twitter');
-		assert.equal(r.value, 'twitter.com/alice123');
+		eq(r.key, 'twitter');
+		eq(r.value, 'twitter.com/alice123');
 	});
 	it(`array`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[].type');
-		assert.equal(r.found.length, 3);
-		assert.equal(r.found[0].value, 'book');
-		assert.equal(r.found[1].value, 'movie');
-		assert.equal(r.found[2].value, 'album');
+		eq(r.found.length, 3);
+		eq(r.found[0].value, 'book');
+		eq(r.found[1].value, 'movie');
+		eq(r.found[2].value, 'album');
 	});
 	it(`array (last)`, () => {
 		let r;
 		r = dig(dummy(), 'charlie.wishlist[]');
-		assert.equal(r.found.length, 4);
-		assert.equal(r.found[0].type, 'book');
-		assert.equal(r.found[1].type, 'movie');
-		assert.equal(r.found[2].type, 'album');
-		assert.equal(r.found[3], 'xxx_not_an_object_xxx');
+		eq(r.found.length, 4);
+		eq(r.found[0].type, 'book');
+		eq(r.found[1].type, 'movie');
+		eq(r.found[2].type, 'album');
+		eq(r.found[3], 'xxx_not_an_object_xxx');
 	});
 	it(`wildcard`, () => {
 		let r;
 		r = dig(dummy(), '*.age');
-		assert.equal(Object.keys(r.found).length, 3);
-		assert.equal(r.found.alice.value,   10);
-		assert.equal(r.found.bob.value,     20);
-		assert.equal(r.found.charlie.value, 30);
+		eq(Object.keys(r.found).length, 3);
+		eq(r.found.alice.value,   10);
+		eq(r.found.bob.value,     20);
+		eq(r.found.charlie.value, 30);
 	});
 	it(`wildcard (last)`, () => {
 		let r;
 		r = dig(dummy(), 'alice.*');
-		assert.equal(Object.keys(r.found).length, 3);
-		assert.equal(r.found.age, 10);
-		assert.equal(r.found.sex, 'female');
-		assert.deepEqual(r.found.accounts, {
+		eq(Object.keys(r.found).length, 3);
+		eq(r.found.age, 10);
+		eq(r.found.sex, 'female');
+		deq(r.found.accounts, {
 			twitter: 'twitter.com/alice123',
 			apple:   'apple.com/alice123'
 		});
@@ -107,24 +116,24 @@ describe(`Function: dig`, () => {
 			let d1 = dummy();
 			let d2 = dummy();
 			r = dig(d2, 'bob.age', {set: 21});
-			assert.notEqual(r.value, d1.bob.age);
-			assert.equal(r.value, d2.bob.age);
+			neq(r.value, d1.bob.age);
+			eq(r.value, d2.bob.age);
 
 			r = dig(dummy(), 'bob.non_existent', {set: 'XXX'});
-			assert.equal(r.value, undefined);
-			assert.equal(r.err.name, 'NoSuchKey');
+			eq(r.value, undefined);
+			eq(r.err.name, 'NoSuchKey');
 		});
 		it(`set (array)`, () => {
 			let r;
 			let d = dummy();
 			r = dig(d, 'charlie.wishlist[]', {set: 'abc'});
-			assert.deepEqual(d.charlie.wishlist, ['abc', 'abc', 'abc', 'abc']);
+			deq(d.charlie.wishlist, ['abc', 'abc', 'abc', 'abc']);
 		});
 		it(`set (wildcard)`, () => {
 			let r;
 			let d = dummy();
 			r = dig(d, 'alice.*', {set: 'abc'});
-			assert.deepEqual(d.alice, {
+			deq(d.alice, {
 				age: 'abc',
 				sex: 'abc',
 				accounts: 'abc'
@@ -134,14 +143,14 @@ describe(`Function: dig`, () => {
 			let r;
 			let d = dummy();
 			r = dig(d, 'bob.x.y.z', {makePath: true});
-			assert.ok('x' in d.bob);
-			assert.equal(typeof d.bob.x, 'object');
+			ok('x' in d.bob);
+			eq(typeof d.bob.x, 'object');
 
-			assert.ok('y' in d.bob.x);
-			assert.equal(typeof d.bob.x.y, 'object');
+			ok('y' in d.bob.x);
+			eq(typeof d.bob.x.y, 'object');
 
-			assert.ok('z' in d.bob.x.y);
-			assert.strictEqual(d.bob.x.y.z, undefined);
+			ok('z' in d.bob.x.y);
+			seq(d.bob.x.y.z, undefined);
 		});
 		it(`makePath (function)`, () => {
 			let r;
@@ -151,29 +160,29 @@ describe(`Function: dig`, () => {
 				makePath: (obj, key, n) => {
 					called++;
 					if (n === 1) {
-						assert.strictEqual(obj, d.bob);
-						assert.equal(key, 'x');
+						seq(obj, d.bob);
+						eq(key, 'x');
 					} else if (n === 2) {
-						assert.strictEqual(obj, d.bob.x);
-						assert.equal(key, 'y');
+						seq(obj, d.bob.x);
+						eq(key, 'y');
 					}
 					return {n};
 				}
 			});
-			assert.equal(called, 2);
-			assert.equal(d.bob.x.n, 1);
-			assert.equal(d.bob.x.y.n, 2);
+			eq(called, 2);
+			eq(d.bob.x.n, 1);
+			eq(d.bob.x.y.n, 2);
 		});
 		it(`mutate`, () => {
 			let d1 = dummy();
 			let d2 = dummy();
 			dig(d2, 'bob.age', {mutate: age => age * 2});
-			assert.equal(d2.bob.age, d1.bob.age * 2);
+			eq(d2.bob.age, d1.bob.age * 2);
 		});
 		it(`mutate (array)`, () => {
 			let d = dummy();
 			dig(d, 'charlie.wishlist[]', {mutate: item => 'Mutated: ' + (typeof item == 'object' ? item.title : item)});
-			assert.deepEqual(d.charlie.wishlist, [
+			deq(d.charlie.wishlist, [
 				'Mutated: The Origin of Consciousness in the Breakdown of the Bicameral Mind',
 				'Mutated: Mulholland Dr.',
 				'Mutated: Grace',
@@ -183,7 +192,7 @@ describe(`Function: dig`, () => {
 		it(`mutate (wildcard)`, () => {
 			let d = dummy();
 			dig(d, 'alice.accounts.*', {mutate: prop => 'Mutated: ' + prop});
-			assert.deepEqual(d.alice.accounts, {
+			deq(d.alice.accounts, {
 				apple:   'Mutated: apple.com/alice123',
 				twitter: 'Mutated: twitter.com/alice123',
 			});
@@ -194,9 +203,9 @@ describe(`Function: dig`, () => {
 			let opts = data.args.length > 2 ? data.args[2] : {};
 			let r = dig(data.args[0], data.args[1], Object.assign(opts, {throw: false}));
 			// validate error
-			if (data.name) assert.equal(data.name, r.err.name);
+			if (data.name) eq(data.name, r.err.name);
 			if (data.info) {
-				for (let key in data.info) assert.equal(data.info[key], r.err.info[key]);
+				for (let key in data.info) eq(data.info[key], r.err.info[key]);
 			}
 			// check if it throws the exact same error
 			assert.throws(() => {
@@ -265,8 +274,8 @@ describe(`Function: dig`, () => {
 			};
 
 			let dug = dig(obj, 'mammals.*.legs');
-			assert.equal(dug.found.ape.value, 2);
-			assert.equal(dug.found.rhino.value, 4);
+			eq(dug.found.ape.value, 2);
+			eq(dug.found.rhino.value, 4);
 		});
 	});
 });
