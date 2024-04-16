@@ -111,6 +111,22 @@ describe(`Function: dig`, () => {
 		});
 	});
 	describe(`options`, () => {
+		it(`has`, () => {
+			let r;
+			let d = dummy();
+			r = dig(d, 'alice', {has(obj, prop) {
+				seq(obj, d);
+				eq(prop, 'alice');
+				return true;
+			}});
+
+			r = dig(d, 'alice.toString');
+			ok(!r.err);
+
+			r = dig(d, 'alice.toString', {has: Object.hasOwn});
+			ok(r.err);
+			eq(r.err.name, 'NoSuchKey');
+		})
 		it(`set`, () => {
 			let r;
 			let d1 = dummy();
