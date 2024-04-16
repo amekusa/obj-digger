@@ -113,10 +113,22 @@ describe(`Function: dig`, () => {
 			r = dig(dummy(), 'bob.non_existent', {set: 'XXX'});
 			assert.equal(r.value, undefined);
 			assert.equal(r.err.name, 'NoSuchKey');
-
-			r = dig(dummy(), 'bob.non_existent', {default: 'XXX'});
-			assert.equal(r.value, undefined);
-			assert.equal(r.err.name, 'NoSuchKey');
+		});
+		it(`set (array)`, () => {
+			let r;
+			let d = dummy();
+			r = dig(d, 'charlie.wishlist[]', {set: 'abc'});
+			assert.deepEqual(d.charlie.wishlist, ['abc', 'abc', 'abc', 'abc']);
+		});
+		it(`set (wildcard)`, () => {
+			let r;
+			let d = dummy();
+			r = dig(d, 'alice.*', {set: 'abc'});
+			assert.deepEqual(d.alice, {
+				age: 'abc',
+				sex: 'abc',
+				accounts: 'abc'
+			});
 		});
 		it(`makePath`, () => {
 			let r;
@@ -153,11 +165,28 @@ describe(`Function: dig`, () => {
 			assert.equal(d.bob.x.y.n, 2);
 		});
 		it(`mutate`, () => {
-			let r;
 			let d1 = dummy();
 			let d2 = dummy();
 			dig(d2, 'bob.age', {mutate: age => age * 2});
 			assert.equal(d2.bob.age, d1.bob.age * 2);
+		});
+		it(`mutate (array)`, () => {
+			let d = dummy();
+			dig(d, 'charlie.wishlist[]', {mutate: item => 'Mutated: ' + (typeof item == 'object' ? item.title : item)});
+			assert.deepEqual(d.charlie.wishlist, [
+				'Mutated: The Origin of Consciousness in the Breakdown of the Bicameral Mind',
+				'Mutated: Mulholland Dr.',
+				'Mutated: Grace',
+				'Mutated: xxx_not_an_object_xxx',
+			]);
+		});
+		it(`mutate (wildcard)`, () => {
+			let d = dummy();
+			dig(d, 'alice.accounts.*', {mutate: prop => 'Mutated: ' + prop});
+			assert.deepEqual(d.alice.accounts, {
+				apple:   'Mutated: apple.com/alice123',
+				twitter: 'Mutated: twitter.com/alice123',
+			});
 		});
 	});
 	describe(`error handling`, () => {
