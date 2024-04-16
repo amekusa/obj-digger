@@ -17,8 +17,9 @@
     "build": "rollup -c",
     "clean": "rm -rf ./dist",
     "prod": "npm run clean; NODE_ENV=production npm run build",
-    "cov": "c8 mocha --enable-source-maps && c8 report -r lcov",
-    "cov:pub": "codecovcli --verbose create-commit"
+    "cov": "npm run cov:gen && npm run cov:pub",
+    "cov:gen": "c8 npm test && c8 report -r lcov",
+    "cov:pub": "codecovcli --verbose upload-process"
   },
   "watch": {
     "test": {
