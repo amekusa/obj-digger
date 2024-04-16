@@ -140,6 +140,19 @@ try {
 }
 ```
 
+---
+
+### `options.has`
+By default, obj-digger uses `in` operator to check if the object has the queried properties.
+If this behavior is not desirable, you can override it with `options.has`.
+
+`options.has` takes a function that returns a boolean value.
+So, for example, you can pass `Object.hasOwn`:
+
+```js
+dig(obj, 'xxx.yyy', { has: Object.hasOwn });
+```
+
 
 ## Advanced usage: Array Queries
 If you want to dig **multiple objects in an array** like this:
