@@ -14,10 +14,11 @@
   "scripts": {
     "dev": "npm-watch",
     "test": "mocha --enable-source-maps",
-    "codecov": "c8 mocha --enable-source-maps && c8 report -r lcov && codecov",
     "build": "rollup -c",
     "clean": "rm -rf ./dist",
-    "prod": "npm run clean; NODE_ENV=production npm run build"
+    "prod": "npm run clean; NODE_ENV=production npm run build",
+    "cov": "c8 mocha --enable-source-maps && c8 report -r lcov",
+    "cov:pub": "codecovcli --verbose create-commit"
   },
   "watch": {
     "test": {
