@@ -64,6 +64,10 @@ function modify(obj, key, opts) {
 	return obj;
 }
 
+function _has(obj, key) {
+	return key in obj;
+}
+
 /**
  * @param {object} obj - Object to dig into
  * @param {string|string[]} path - Sequence of property-keys to go through
@@ -80,6 +84,7 @@ function dig(obj, path, opts = {}) {
 function _dig(obj, path, opts) {
 	let r = {path: [obj]};
 	let last = path.length - 1;
+	let has = opts.has || _has;
 	for (let i = 0;; i++) {
 		let p = path[i]; // pick up a crumb
 
@@ -108,7 +113,7 @@ function _dig(obj, path, opts) {
 
 		if (p.endsWith('[]')) { // Path: Array
 			p = p.substring(0, p.length - 2);
-			if (p in obj) {
+			if (has(obj, p)) {
 				obj = obj[p];
 				if (!Array.isArray(obj)) { // not an array
 					r.err = error(opts.throw, 'TypeMismatch', {
@@ -148,7 +153,7 @@ function _dig(obj, path, opts) {
 			return r;
 		}
 
-		if (p in obj) { // Path Found
+		if (has(obj, p)) { // Path Found
 			if (i == last) { // destination
 				modify(obj, p, opts);
 				r.key   = p;
