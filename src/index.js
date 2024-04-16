@@ -78,13 +78,14 @@ function dig(obj, path, opts = {}) {
 	if (!path.length) return obj;
 
 	let r = {path: [obj]};
+	let last = path.length - 1;
 	for (let i = 0;; i++) {
 		let p = path[i]; // pick up a crumb
 
 		if (p == '*') { // Path: Wildcard
 			r.found = {};
 			let keys = Object.keys(obj);
-			if (i == path.length - 1) {
+			if (i == last) {
 				// wildcard destination; add every property to results
 				for (let j = 0; j < keys.length; j++) {
 					modify(obj, keys[j], opts);
@@ -119,7 +120,7 @@ function dig(obj, path, opts = {}) {
 				}
 				r.path.push(obj);
 				r.found = [];
-				if (i == path.length - 1) {
+				if (i == last) {
 					// array destination; add every element to results
 					for (let j = 0; j < obj.length; j++) {
 						modify(obj, j, opts);
@@ -147,7 +148,7 @@ function dig(obj, path, opts = {}) {
 		}
 
 		if (p in obj) { // Path Found
-			if (i == path.length - 1) { // destination
+			if (i == last) { // destination
 				modify(obj, p, opts);
 				r.key   = p;
 				r.value = obj[p];
@@ -170,7 +171,7 @@ function dig(obj, path, opts = {}) {
 		} else if (opts.makePath) { // Make Path
 			for (;; i++) {
 				p = path[i];
-				if (i == path.length - 1) { // destination
+				if (i == last) { // destination
 					obj[p] = undefined;
 					modify(obj, p, opts);
 					r.key   = p;
