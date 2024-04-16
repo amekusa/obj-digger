@@ -23,7 +23,7 @@ const dig = require('obj-digger');
 
 
 ## How to use
-*obj-digger* is just a single function.
+obj-digger is just a single function.
 
 ```js
 // Basic Usage
@@ -53,7 +53,7 @@ console.log( key );   // 'twitter'
 console.log( value ); // 'alice123'
 ```
 
-The 2nd parameter is the **query** pointing at the property you want to access.
+The 2nd parameter is a **query** taht points at the property you want to access.
 If the property was not found, the returned object gets to have **`err`** object.
 
 ```js
@@ -146,7 +146,7 @@ Then, put **square brackets `[]`** to the name of the array property in the quer
 let dug = dig(obj, 'items[].type');
 ```
 
-The return value, at this time, has a bit different structure.
+The return value, at this time, has a different structure.
 The function **recusively operates** for each object in the array, and stores each result into **`found`** property of the return value.
 
 ```js
