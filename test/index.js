@@ -213,6 +213,23 @@ describe(`Function: dig`, () => {
 				twitter: 'Mutated: twitter.com/alice123',
 			});
 		});
+		it(`stack`, () => {
+			let r, d;
+			d = dummy();
+			r = dig(d, 'alice.accounts.apple', {stack: true});
+			eq(r.stack.length, 3);
+
+			seq(r.stack[0].next, r.stack[1]);
+			seq(r.stack[1].prev, r.stack[0]);
+			seq(r.stack[1].next, r.stack[2]);
+			seq(r.stack[2].prev, r.stack[1]);
+
+			seq(r.stack[0].value, d);
+			seq(r.stack[1].key,   'alice');
+			seq(r.stack[1].value, d.alice);
+			seq(r.stack[2].key,   'accounts');
+			seq(r.stack[2].value, d.alice.accounts);
+		});
 	});
 	describe(`error handling`, () => {
 		function checkError(data) {
