@@ -134,7 +134,7 @@ If this option is `true`, the return value gets to have **`stack`** property, wh
 
 ```js
 let dug = dig(obj, `Alice.accounts.twitter`, {stack: true});
-dug.stack[0]       === obj                // true
+dug.stack[0].value === obj                // true
 dug.stack[1].key   === 'Alice'            // true
 dug.stack[1].value === obj.Alice          // true
 dug.stack[2].key   === 'accounts'         // true
