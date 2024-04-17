@@ -129,6 +129,29 @@ And the return value of `options.mutate` becomes the new value.
 
 ---
 
+### `options.stack`
+If this option is `true`, the return value gets to have **`stack`** property, which is an array of all the objects that obj-digger went through.
+
+```js
+let dug = dig(obj, `Alice.accounts.twitter`, {stack: true});
+dug.stack[0]       === obj                // true
+dug.stack[1].key   === 'Alice'            // true
+dug.stack[1].value === obj.Alice          // true
+dug.stack[2].key   === 'accounts'         // true
+dug.stack[2].value === obj.Alice.accounts // true
+```
+
+Also, `dug.stack` is structured like a **doubly-linked-list**, so you can access the adjacent objects via `prev` / `next` properties.
+
+```js
+dug.stack[0].next === dug.stack[1] // true
+dug.stack[1].prev === dug.stack[0] // true
+dug.stack[1].next === dug.stack[2] // true
+dug.stack[2].prev === dug.stack[1] // true
+```
+
+---
+
 ### `options.throw`
 If this option is `true`, the function throws errors when they occur.
 
