@@ -12,5 +12,5 @@ codecov:
 You can retrieve the token from `codecov.com`.  
 See: https://docs.codecov.com/docs/quick-start
 
-2. Run `npm run codecov` (codecov-cli required)
+2. Run `npm run cov` (codecov-cli required)
 
