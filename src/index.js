@@ -64,6 +64,12 @@ function modify(obj, key, opts) {
 	return obj;
 }
 
+function pushStack(stack, data) {
+	data.prev = stack[stack.length - 1];
+	data.prev.next = data;
+	stack.push(data);
+}
+
 function _has(obj, key) {
 	return key in obj;
 }
@@ -82,7 +88,7 @@ function dig(obj, path, opts = {}) {
 }
 
 function _dig(obj, path, opts) {
-	let r = {path: [obj]};
+	let r = opts.stack ? {stack: [{value: obj}]} : {};
 	let last = path.length - 1;
 	let has = opts.has || _has;
 	for (let i = 0;; i++) {
@@ -117,14 +123,12 @@ function _dig(obj, path, opts) {
 				obj = obj[p];
 				if (!Array.isArray(obj)) { // not an array
 					r.err = error(opts.throw, 'TypeMismatch', {
-						path: r.path,
 						key: p,
 						value: obj,
 						expectedType: 'Array'
 					});
 					return r;
 				}
-				r.path.push(obj);
 				r.found = [];
 				if (i == last) {
 					// array destination; add every element to results
@@ -134,6 +138,7 @@ function _dig(obj, path, opts) {
 					}
 				} else {
 					// array branching; dig every element
+					if (r.stack) pushStack(r.stack, {key: p, value: obj});
 					path = path.slice(i + 1); // remaining crumbs to pick up
 					for (let j = 0; j < obj.length; j++) {
 						if (isDiggable(obj[j])) {
@@ -146,10 +151,7 @@ function _dig(obj, path, opts) {
 				return r;
 			}
 			// path not found
-			r.err = error(opts.throw, 'NoSuchKey', {
-				path: r.path,
-				key: p
-			});
+			r.err = error(opts.throw, 'NoSuchKey', {key: p});
 			return r;
 		}
 
@@ -162,11 +164,10 @@ function _dig(obj, path, opts) {
 			}
 			if (isDiggable(obj[p])) { // dig
 				obj = obj[p];
-				r.path.push(obj);
+				if (r.stack) pushStack(r.stack, {key: p, value: obj});
 
 			} else { // not diggable
 				r.err = error(opts.throw, 'TypeMismatch', {
-					path: r.path,
 					key: p,
 					value: obj[p],
 					expectedType: 'object'
@@ -187,14 +188,11 @@ function _dig(obj, path, opts) {
 				// make the rest of the path
 				obj[p] = (opts.makePath === true) ? {} : opts.makePath(obj, p, i);
 				obj = obj[p];
-				r.path.push(obj);
+				if (r.stack) pushStack(r.stack, {key: p, value: obj});
 			}
 
 		} else { // Path Not Found
-			r.err = error(opts.throw, 'NoSuchKey', {
-				path: r.path,
-				key: p
-			});
+			r.err = error(opts.throw, 'NoSuchKey', {key: p});
 			return r;
 		}
 	}
