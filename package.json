@@ -19,7 +19,7 @@
     "prod": "npm run clean; NODE_ENV=production npm run build",
     "cov": "npm run cov:gen && npm run cov:pub",
     "cov:gen": "c8 npm test && c8 report -r lcov",
-    "cov:pub": "codecovcli --verbose upload-process"
+    "cov:pub": "curl -X POST --data-binary @.codecov.yml https://codecov.io/validate && codecovcli --verbose upload-process"
   },
   "watch": {
     "test": {
